@@ -1,0 +1,11 @@
+# Edugen Base App
+
+## To create the new admin: python manage.py createsuperuser
+
+Admin details:
+    - username: superadmin
+    - password: superadmin
+
+To run the project: python manage.py runserver
+
+    Use this url to redirect the UI : http://127.0.0.1:8000/

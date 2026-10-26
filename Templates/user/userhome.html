@@ -1,0 +1,156 @@
+{% extends 'user/userbase.html' %}
+
+{% block title %}Analyst Overview | TrustShield AI{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <!-- Welcome & SOC Status Banner -->
+    <div class="bg-gradient-to-r from-cyber-800/90 via-cyber-800/60 to-cyber-700/40 border border-slate-700/80 rounded-2xl p-6 sm:p-8 backdrop-blur-xl relative overflow-hidden shadow-xl">
+        <div class="absolute -right-12 -top-12 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-2">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-800 text-emerald-400 text-xs font-mono">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span>Threat Engine Ready</span>
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                    Welcome back, <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 font-mono">{{ user.username }}</span>
+                </h1>
+                <p class="text-slate-300 text-sm max-w-2xl leading-relaxed">
+                    Select a detection utility below to inspect real-time URL telemetry, evaluate multi-view neural predictions, or submit suspicious samples to the active-learning quarantine.
+                </p>
+            </div>
+
+            <!-- Quick Engine Status Badges -->
+            <div class="flex flex-row md:flex-col gap-2 shrink-0 font-mono text-xs">
+                <div class="bg-cyber-900/90 border border-slate-700 px-3.5 py-2 rounded-xl flex items-center justify-between space-x-3">
+                    <span class="text-slate-400">Autonomous Gate:</span>
+                    <span class="text-emerald-400 font-bold">99.93% PASS</span>
+                </div>
+                <div class="bg-cyber-900/90 border border-slate-700 px-3.5 py-2 rounded-xl flex items-center justify-between space-x-3">
+                    <span class="text-slate-400">Drift Threshold:</span>
+                    <span class="text-cyan-400 font-bold">p &lt; 0.05 Active</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Telemetry Metric Row -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        
+        <div class="bg-cyber-800/60 border border-slate-800 p-4 rounded-xl backdrop-blur text-center">
+            <span class="text-[11px] font-mono text-slate-400 uppercase tracking-wider block">Detection Accuracy</span>
+            <span class="text-xl sm:text-2xl font-extrabold text-emerald-400 font-mono">99.9777%</span>
+            <span class="text-[10px] text-slate-500 block mt-0.5">Multi-View Ensemble</span>
+        </div>
+
+        <div class="bg-cyber-800/60 border border-slate-800 p-4 rounded-xl backdrop-blur text-center">
+            <span class="text-[11px] font-mono text-slate-400 uppercase tracking-wider block">Model Precision</span>
+            <span class="text-xl sm:text-2xl font-extrabold text-cyan-400 font-mono">99.9653%</span>
+            <span class="text-[10px] text-slate-500 block mt-0.5">Zero-Day Minimization</span>
+        </div>
+
+        <div class="bg-cyber-800/60 border border-slate-800 p-4 rounded-xl backdrop-blur text-center">
+            <span class="text-[11px] font-mono text-slate-400 uppercase tracking-wider block">Model Recall</span>
+            <span class="text-xl sm:text-2xl font-extrabold text-blue-400 font-mono">99.9901%</span>
+            <span class="text-[10px] text-slate-500 block mt-0.5">Phishing Interception</span>
+        </div>
+
+        <div class="bg-cyber-800/60 border border-slate-800 p-4 rounded-xl backdrop-blur text-center">
+            <span class="text-[11px] font-mono text-slate-400 uppercase tracking-wider block">Quarantine Rate</span>
+            <span class="text-xl sm:text-2xl font-extrabold text-amber-400 font-mono">0.07%</span>
+            <span class="text-[10px] text-slate-500 block mt-0.5">Active-Learning Stream</span>
+        </div>
+
+    </div>
+
+    <!-- Core Tracking Utilities -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Automated Live Tracker Card -->
+        <div class="bg-gradient-to-b from-cyber-800/90 to-cyber-900 border border-slate-700/80 rounded-2xl p-6 flex flex-col justify-between hover:border-cyan-500/50 transition-all duration-300 shadow-lg group">
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-950/80 border border-cyan-800 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
+                        <i class="bi bi-radar text-2xl animate-pulse"></i>
+                    </div>
+                    <span class="px-3 py-1 bg-cyan-950/60 border border-cyan-800/80 text-cyan-300 text-xs font-mono rounded-lg">Stream Mode</span>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">Automated Live Tracker</h3>
+                    <p class="text-slate-400 text-sm mt-1 leading-relaxed">
+                        Stream batch URLs, inspect real-time multi-view embeddings, evaluate confidence scores, and observe autonomous classification vs. quarantine routing.
+                    </p>
+                </div>
+
+                <div class="pt-2 border-t border-slate-800/80 space-y-2 text-xs text-slate-300">
+                    <div class="flex items-center space-x-2">
+                        <i class="bi bi-check2 text-cyan-400"></i>
+                        <span>Token-level character sequence extraction</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="bi bi-check2 text-cyan-400"></i>
+                        <span>Autonomous confidence & novelty gating</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="bi bi-check2 text-cyan-400"></i>
+                        <span>Continuous latency and threat metric feed</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-4">
+                <a href="{% url 'userlivetracker' %}" 
+                   class="w-full inline-flex items-center justify-center py-3 px-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold text-sm rounded-xl shadow-lg shadow-cyan-500/20 transition-all">
+                    <i class="bi bi-play-circle-fill mr-2"></i> Launch Live Tracker
+                </a>
+            </div>
+        </div>
+
+        <!-- Manual Intelligence Tracker Card -->
+        <div class="bg-gradient-to-b from-cyber-800/90 to-cyber-900 border border-slate-700/80 rounded-2xl p-6 flex flex-col justify-between hover:border-amber-500/50 transition-all duration-300 shadow-lg group">
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <div class="w-12 h-12 rounded-xl bg-amber-950/80 border border-amber-800 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
+                        <i class="bi bi-input-cursor-text text-2xl"></i>
+                    </div>
+                    <span class="px-3 py-1 bg-amber-950/60 border border-amber-800/80 text-amber-300 text-xs font-mono rounded-lg">Interactive Scan</span>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-bold text-white group-hover:text-amber-400 transition-colors">Manual Threat Scanner</h3>
+                    <p class="text-slate-400 text-sm mt-1 leading-relaxed">
+                        Manually evaluate custom target URLs, dissect lexical & structural parameters, test zero-day patterns, and contribute validated threat intel.
+                    </p>
+                </div>
+
+                <div class="pt-2 border-t border-slate-800/80 space-y-2 text-xs text-slate-300">
+                    <div class="flex items-center space-x-2">
+                        <i class="bi bi-check2 text-amber-400"></i>
+                        <span>Detailed structural & lexical feature decomposition</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="bi bi-check2 text-amber-400"></i>
+                        <span>Manual quarantine submission & verification</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="bi bi-check2 text-amber-400"></i>
+                        <span>Crowdsourced threat signature contribution</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-4">
+                <a href="{% url 'manuallivetrackers' %}" 
+                   class="w-full inline-flex items-center justify-center py-3 px-4 bg-cyber-700 hover:bg-cyber-600 border border-slate-600 text-white font-semibold text-sm rounded-xl transition-all">
+                    <i class="bi bi-search mr-2 text-amber-400"></i> Open Manual Scanner
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

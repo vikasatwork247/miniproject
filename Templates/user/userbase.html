@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Analyst Portal | TrustShield AI{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        cyber: {
+                            950: '#050811',
+                            900: '#070B14',
+                            850: '#0A101E',
+                            800: '#0D1527',
+                            700: '#152238',
+                            600: '#1E293B',
+                            accent: '#06B6D4',
+                            trust: '#10B981',
+                            threat: '#EF4444',
+                            quarantine: '#F59E0B'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .cyber-grid {
+            background-image: radial-gradient(rgba(14, 165, 233, 0.08) 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-cyber-900 text-slate-200 font-sans min-h-screen flex flex-col antialiased selection:bg-cyan-500 selection:text-white cyber-grid">
+
+    <!-- Top Security Node Healthbar -->
+    <div class="bg-cyber-950 border-b border-slate-800/80 text-[11px] py-1.5 px-4 font-mono">
+        <div class="max-w-7xl mx-auto flex justify-between items-center text-slate-400">
+            <div class="flex items-center space-x-3">
+                <span class="flex items-center text-emerald-400">
+                    <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping mr-1.5"></span>
+                    ACTIVE CLIENT SHIELD
+                </span>
+                <span class="text-slate-700">|</span>
+                <span class="hidden sm:inline text-slate-400">Model: <span class="text-slate-200">Adaptive Multi-View (Confidence & Novelty Gated)</span></span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span>Autonomous Pipeline: <strong class="text-emerald-400">99.93%</strong></span>
+                <span class="text-slate-700">|</span>
+                <span>Threat DB: <span class="text-cyan-400">Live Synced</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="sticky top-0 z-40 bg-cyber-900/90 border-b border-slate-800/90 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                
+                <!-- Left: Branding & Core Navigation Links -->
+                <div class="flex items-center space-x-8">
+                    
+                    <!-- Logo / Workspace Name -->
+                    <a href="{% url 'userhome' %}" class="flex items-center space-x-2.5 group">
+                        <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center text-white font-bold shadow-md shadow-cyan-500/20 group-hover:scale-105 transition-transform">
+                            <i class="bi bi-shield-shaded text-lg"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-base font-extrabold text-white tracking-tight group-hover:text-cyan-400 transition-colors">
+                                TrustShield<span class="text-cyan-400">.AI</span>
+                            </span>
+                            <span class="text-[9px] text-cyan-400 font-mono tracking-wider uppercase -mt-0.5">Analyst Workspace</span>
+                        </div>
+                    </a>
+
+                    <!-- Navigation Links -->
+                    <nav class="hidden md:flex items-center space-x-1 font-medium text-sm">
+                        <a href="{% url 'userhome' %}" 
+                           class="px-3.5 py-2 rounded-lg text-slate-300 hover:text-cyan-400 hover:bg-cyber-800/80 transition-all flex items-center space-x-1.5 {% if request.resolver_match.url_name == 'userhome' %}bg-cyber-800 text-cyan-400 border border-slate-700{% endif %}">
+                            <i class="bi bi-speedometer2"></i>
+                            <span>Overview</span>
+                        </a>
+
+                        <a href="{% url 'userlivetracker' %}" 
+                           class="px-3.5 py-2 rounded-lg text-slate-300 hover:text-cyan-400 hover:bg-cyber-800/80 transition-all flex items-center space-x-1.5 {% if request.resolver_match.url_name == 'userlivetracker' %}bg-cyber-800 text-cyan-400 border border-slate-700{% endif %}">
+                            <i class="bi bi-radar text-emerald-400 animate-pulse"></i>
+                            <span>Automated Live Tracker</span>
+                        </a>
+
+                        <a href="{% url 'manuallivetrackers' %}" 
+                           class="px-3.5 py-2 rounded-lg text-slate-300 hover:text-cyan-400 hover:bg-cyber-800/80 transition-all flex items-center space-x-1.5 {% if request.resolver_match.url_name == 'manuallivetrackers' %}bg-cyber-800 text-cyan-400 border border-slate-700{% endif %}">
+                            <i class="bi bi-input-cursor-text text-amber-400"></i>
+                            <span>Manual Intelligence Scan</span>
+                        </a>
+                    </nav>
+
+                </div>
+
+                <!-- Right: Profile Info & Session Actions -->
+                <div class="flex items-center space-x-4">
+                    
+                    <!-- Identity Pill -->
+                    <div class="hidden sm:flex items-center space-x-2.5 bg-cyber-800/90 border border-slate-700/80 px-3 py-1.5 rounded-xl">
+                        <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold font-mono">
+                            {{ user.username|make_list|first|upper }}
+                        </div>
+                        <div class="flex flex-col text-left">
+                            <span class="text-xs font-bold text-slate-200 leading-tight font-mono">{{ user.username }}</span>
+                            <span class="text-[9px] text-emerald-400 font-medium">SecOps Role</span>
+                        </div>
+                    </div>
+
+                    <!-- Logout Button -->
+                    <a href="{% url 'user_logout' %}" 
+                       class="inline-flex items-center px-3 py-1.5 bg-red-950/40 hover:bg-red-900/60 border border-red-800/60 text-red-200 hover:text-white rounded-lg text-xs font-semibold transition-all shadow-sm">
+                        <i class="bi bi-box-arrow-right mr-1.5"></i>
+                        <span>Exit</span>
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- Global App Messages -->
+    {% if messages %}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 w-full space-y-2">
+        {% for message in messages %}
+        <div class="flex items-center justify-between p-3.5 rounded-xl border backdrop-blur text-xs 
+            {% if message.tags == 'error' %} bg-red-950/40 border-red-800 text-red-200 
+            {% elif message.tags == 'success' %} bg-emerald-950/40 border-emerald-800 text-emerald-200 
+            {% elif message.tags == 'warning' %} bg-amber-950/40 border-amber-800 text-amber-200 
+            {% else %} bg-cyan-950/40 border-cyan-800 text-cyan-200 {% endif %} shadow-lg">
+            <div class="flex items-center space-x-2.5">
+                <i class="bi 
+                    {% if message.tags == 'error' %} bi-exclamation-octagon-fill text-red-400 
+                    {% elif message.tags == 'success' %} bi-check-circle-fill text-emerald-400 
+                    {% elif message.tags == 'warning' %} bi-exclamation-triangle-fill text-amber-400 
+                    {% else %} bi-info-circle-fill text-cyan-400 {% endif %} text-base"></i>
+                <span class="font-medium">{{ message }}</span>
+            </div>
+            <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 w-full">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer Telemetry Strip -->
+    <footer class="bg-cyber-950 border-t border-slate-800/80 text-slate-500 text-[11px] py-4 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div class="flex items-center space-x-3">
+                <span class="text-slate-400 font-mono">Secured by TrustShield Deep ML Framework</span>
+                <span class="text-slate-700">|</span>
+                <span class="text-emerald-400 font-mono">Quarantine Threshold: Conf < 0.95</span>
+            </div>
+            <div>
+                <span>&copy; 2026 Threat Intelligence Lab. All systems normal.</span>
+            </div>
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

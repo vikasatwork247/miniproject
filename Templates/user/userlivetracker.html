@@ -1,0 +1,228 @@
+{% extends 'user/userbase.html' %}
+
+{% block title %}Automated Live Threat Monitor | TrustShield AI{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Header / Stream Controller Strip -->
+    <div class="bg-cyber-800/80 border border-slate-700/80 rounded-2xl p-5 backdrop-blur-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+        <div>
+            <div class="flex items-center space-x-2">
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                <h2 class="text-xl font-bold text-white tracking-tight">Automated Live Threat Monitor</h2>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">Continuous inference stream from incoming URL traffic. Inspect any log event for multi-view telemetry.</p>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <span id="streamStatusBadge" class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-mono font-semibold bg-emerald-950/80 text-emerald-300 border border-emerald-800/80">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span> Streaming Live
+            </span>
+            <button id="toggleStreamBtn" onclick="toggleStream()" class="px-4 py-2 text-xs font-mono font-semibold rounded-xl bg-cyber-700 hover:bg-cyber-600 border border-slate-600 text-slate-200 transition-all shadow">
+                <i class="bi bi-pause-fill mr-1"></i> Pause Stream
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Dual Panel Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Live Stream Feed Column (7 Cols) -->
+        <div class="lg:col-span-7 bg-cyber-800/60 border border-slate-800/80 rounded-2xl p-5 flex flex-col h-[650px] shadow-lg backdrop-blur">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+                <div class="flex items-center space-x-2">
+                    <i class="bi bi-terminal text-cyan-400 text-sm"></i>
+                    <h3 class="text-xs font-mono font-bold text-slate-200 uppercase tracking-wider">Inference Event Stream</h3>
+                </div>
+                <span id="eventCount" class="text-xs font-mono text-cyan-400 bg-cyan-950/60 px-2.5 py-0.5 rounded-md border border-cyan-800/60">0 events logged</span>
+            </div>
+            
+            <div id="streamList" class="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+                <!-- Dynamic log items inject here -->
+            </div>
+        </div>
+
+        <!-- Inspector / Telemetry Detail Column (5 Cols) -->
+        <div class="lg:col-span-5 bg-cyber-800/60 border border-slate-800/80 rounded-2xl p-5 flex flex-col h-[650px] shadow-lg backdrop-blur">
+            <div class="border-b border-slate-800 pb-3 mb-3 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="bi bi-cpu text-indigo-400 text-sm"></i>
+                    <h3 class="text-xs font-mono font-bold text-slate-200 uppercase tracking-wider">Telemetry Inspector</h3>
+                </div>
+                <span class="text-[10px] font-mono text-slate-500 uppercase">Multi-View Deep Probe</span>
+            </div>
+
+            <!-- Empty State Placeholder -->
+            <div id="inspectorPlaceholder" class="flex-1 flex flex-col items-center justify-center text-center p-6 text-slate-500">
+                <div class="w-14 h-14 rounded-2xl bg-cyber-900 border border-slate-800 flex items-center justify-center text-slate-600 mb-3">
+                    <i class="bi bi-cursor text-2xl"></i>
+                </div>
+                <p class="text-xs font-mono text-slate-400">Select any event on the left stream to inspect confidence, uncertainty, and reasoning decomposition.</p>
+            </div>
+
+            <!-- Telemetry Details Content -->
+            <div id="inspectorDetails" class="hidden flex-1 overflow-y-auto space-y-4 pr-1">
+                
+                <!-- URL Box -->
+                <div>
+                    <span class="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Inspected URL Payload</span>
+                    <p id="inspectUrl" class="text-xs font-mono text-cyan-300 break-all bg-cyber-900/90 p-3 rounded-xl border border-slate-800 mt-1 shadow-inner"></p>
+                </div>
+
+                <!-- 2x2 Metric Matrix -->
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div class="p-3 bg-cyber-900/80 rounded-xl border border-slate-800">
+                        <span class="text-[10px] font-mono text-slate-400 block">Class Verdict</span>
+                        <p id="inspectClass" class="text-sm font-extrabold font-mono mt-0.5"></p>
+                    </div>
+                    <div class="p-3 bg-cyber-900/80 rounded-xl border border-slate-800">
+                        <span class="text-[10px] font-mono text-slate-400 block">Model Confidence</span>
+                        <p id="inspectConfidence" class="text-sm font-extrabold font-mono text-cyan-400 mt-0.5"></p>
+                    </div>
+                    <div class="p-3 bg-cyber-900/80 rounded-xl border border-slate-800">
+                        <span class="text-[10px] font-mono text-slate-400 block">P(Legitimate)</span>
+                        <p id="inspectProb" class="text-sm font-extrabold font-mono text-slate-200 mt-0.5"></p>
+                    </div>
+                    <div class="p-3 bg-cyber-900/80 rounded-xl border border-slate-800">
+                        <span class="text-[10px] font-mono text-slate-400 block">Uncertainty (H)</span>
+                        <p id="inspectUncertainty" class="text-sm font-extrabold font-mono text-amber-400 mt-0.5"></p>
+                    </div>
+                </div>
+
+                <!-- Detailed Parameters List -->
+                <div class="p-3.5 rounded-xl bg-cyber-900/80 border border-slate-800 space-y-2 text-xs font-mono">
+                    <div class="flex justify-between items-center border-b border-slate-800/80 pb-1.5">
+                        <span class="text-slate-400">System Action:</span>
+                        <span id="inspectAction" class="font-bold px-2 py-0.5 rounded text-[11px]"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b border-slate-800/80 pb-1.5">
+                        <span class="text-slate-400">Ground Truth:</span>
+                        <span id="inspectActual" class="font-semibold text-slate-300"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b border-slate-800/80 pb-1.5">
+                        <span class="text-slate-400">Shannon Entropy:</span>
+                        <span id="inspectEntropy" class="font-semibold text-slate-300"></span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400">Feature Vector:</span>
+                        <span id="inspectSource" class="font-semibold text-cyan-400"></span>
+                    </div>
+                </div>
+
+                <!-- AI Reasoning Explanation Box -->
+                <div id="inspectExplanationBox" class="p-3.5 rounded-xl border text-xs leading-relaxed space-y-1">
+                    <div class="flex items-center space-x-1.5 font-bold">
+                        <i class="bi bi-cpu-fill"></i>
+                        <span>Neural Reasoning Decomposition</span>
+                    </div>
+                    <p id="inspectExplanation" class="text-slate-300 text-xs font-normal"></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let streamActive = true;
+    let eventHistory = [];
+    const MAX_EVENTS = 30;
+    const POLL_INTERVAL = 3000;
+
+    async function fetchSample() {
+        if (!streamActive) return;
+
+        try {
+            const res = await fetch("{% url 'get_live_tracker_sample' %}");
+            const json = await res.json();
+            
+            if (json.status === "success") {
+                addEvent(json.data);
+            }
+        } catch (e) {
+            console.error("Feed error:", e);
+        }
+    }
+
+    function addEvent(data) {
+        eventHistory.unshift(data);
+        if (eventHistory.length > MAX_EVENTS) eventHistory.pop();
+
+        document.getElementById('eventCount').innerText = `${eventHistory.length} events logged`;
+        renderStream();
+    }
+
+    function renderStream() {
+        const list = document.getElementById('streamList');
+        list.innerHTML = eventHistory.map((item, idx) => `
+            <div onclick="selectEvent(${idx})" 
+                 class="p-3 rounded-xl border border-slate-800/80 hover:border-cyan-500/50 bg-cyber-900/60 hover:bg-cyber-900 cursor-pointer transition-all duration-200 flex items-center justify-between text-xs group">
+                <div class="flex items-center space-x-3 overflow-hidden">
+                    <span class="text-slate-500 font-mono text-[11px]">${item.timestamp}</span>
+                    <span class="px-2 py-0.5 rounded-md font-mono text-[11px] font-bold ${item.is_legitimate ? 'bg-emerald-950/80 text-emerald-400 border border-emerald-800/80' : 'bg-red-950/80 text-red-400 border border-red-800/80'}">
+                        ${item.predicted_class}
+                    </span>
+                    <span class="font-mono text-slate-300 truncate max-w-[180px] sm:max-w-[240px] group-hover:text-white transition-colors">${item.url}</span>
+                </div>
+                <span class="text-cyan-400 font-mono font-bold whitespace-nowrap ml-2">${item.confidence}%</span>
+            </div>
+        `).join('');
+    }
+
+    function selectEvent(idx) {
+        const item = eventHistory[idx];
+        if (!item) return;
+
+        document.getElementById('inspectorPlaceholder').classList.add('hidden');
+        document.getElementById('inspectorDetails').classList.remove('hidden');
+
+        document.getElementById('inspectUrl').innerText = item.url;
+        
+        const classEl = document.getElementById('inspectClass');
+        classEl.innerText = item.predicted_class;
+        classEl.className = `text-sm font-extrabold font-mono mt-0.5 ${item.is_legitimate ? 'text-emerald-400' : 'text-red-400'}`;
+
+        document.getElementById('inspectConfidence').innerText = `${item.confidence}%`;
+        document.getElementById('inspectProb').innerText = item.probability;
+        document.getElementById('inspectUncertainty').innerText = item.uncertainty;
+        
+        const actionEl = document.getElementById('inspectAction');
+        actionEl.innerText = item.system_action;
+        if (item.system_action === 'AUTONOMOUS ACCEPT') {
+            actionEl.className = 'font-bold font-mono px-2 py-0.5 rounded text-[11px] bg-emerald-950 text-emerald-300 border border-emerald-800';
+        } else {
+            actionEl.className = 'font-bold font-mono px-2 py-0.5 rounded text-[11px] bg-amber-950 text-amber-300 border border-amber-800';
+        }
+
+        document.getElementById('inspectActual').innerText = item.actual_label;
+        document.getElementById('inspectEntropy').innerText = item.entropy_score;
+        document.getElementById('inspectSource').innerText = item.feature_source;
+        document.getElementById('inspectExplanation').innerText = item.explanation;
+
+        const expBox = document.getElementById('inspectExplanationBox');
+        expBox.className = `p-3.5 rounded-xl border text-xs leading-relaxed space-y-1 ${item.is_legitimate ? 'bg-emerald-950/30 border-emerald-800/60 text-emerald-300' : 'bg-red-950/30 border-red-800/60 text-red-300'}`;
+    }
+
+    function toggleStream() {
+        streamActive = !streamActive;
+        const btn = document.getElementById('toggleStreamBtn');
+        const badge = document.getElementById('streamStatusBadge');
+        
+        if (streamActive) {
+            btn.innerHTML = '<i class="bi bi-pause-fill mr-1"></i> Pause Stream';
+            badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span> Streaming Live';
+            badge.className = 'inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-mono font-semibold bg-emerald-950/80 text-emerald-300 border border-emerald-800/80';
+        } else {
+            btn.innerHTML = '<i class="bi bi-play-fill mr-1"></i> Resume Stream';
+            badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400 mr-2"></span> Stream Paused';
+            badge.className = 'inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-mono font-semibold bg-amber-950/80 text-amber-300 border border-amber-800/80';
+        }
+    }
+
+    fetchSample();
+    setInterval(fetchSample, POLL_INTERVAL);
+</script>
+{% endblock %}

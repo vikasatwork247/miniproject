@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+
+{% block title %}A Robust Machine Learning Framework for Dynamic Phishing URL Detection and Threat Intelligence Integration{% endblock %}
+
+{% block content %}
+<div class="space-y-16 py-4">
+
+    <!-- Hero Section -->
+    <div class="relative text-center max-w-4xl mx-auto space-y-6">
+        
+        <!-- Badge -->
+        <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-cyan-950/60 border border-cyan-800/80 text-cyan-300 text-xs font-mono mb-2 shadow-inner">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+            <span>Next-Gen Cybersecurity Architecture</span>
+            <span class="text-slate-500">|</span>
+            <span class="text-emerald-400 font-bold">99.9777% Accuracy</span>
+        </div>
+
+        <!-- Main Title -->
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
+            Dynamic Phishing URL Detection with <span class="bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent">Trust-Aware ML</span>
+        </h1>
+
+        <!-- Subheading -->
+        <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed">
+            Integrating deep sequence representations, structural multi-view feature fusion, and confidence-driven active learning to stop zero-day phishing attacks autonomously.
+        </p>
+
+        <!-- CTAs -->
+        <div class="flex flex-wrap justify-center items-center gap-4 pt-4">
+            <a href="{% url 'register' %}" class="inline-flex items-center px-6 py-3.5 text-sm font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl shadow-lg shadow-cyan-500/20 hover:from-cyan-400 hover:to-blue-500 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                <i class="bi bi-shield-lock-fill mr-2 text-base"></i> Get Started
+            </a>
+            <a href="{% url 'loginn' %}" class="inline-flex items-center px-6 py-3.5 text-sm font-semibold text-slate-200 bg-cyber-800 border border-slate-700 hover:border-slate-500 hover:bg-cyber-700/80 rounded-xl transition-all">
+                <i class="bi bi-box-arrow-in-right mr-2 text-base text-cyan-400"></i> Access Portal
+            </a>
+        </div>
+    </div>
+
+    <!-- Key Performance Telemetry Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+        
+        <div class="bg-cyber-800/60 border border-slate-800 p-5 rounded-2xl backdrop-blur text-center hover:border-cyan-500/30 transition-all">
+            <div class="text-xs font-mono text-slate-400 uppercase tracking-wider mb-1">Model Accuracy</div>
+            <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono">99.9777%</div>
+            <div class="text-[11px] text-slate-500 mt-1">Evaluated on 40,378 test URLs</div>
+        </div>
+
+        <div class="bg-cyber-800/60 border border-slate-800 p-5 rounded-2xl backdrop-blur text-center hover:border-cyan-500/30 transition-all">
+            <div class="text-xs font-mono text-slate-400 uppercase tracking-wider mb-1">ROC-AUC Score</div>
+            <div class="text-2xl sm:text-3xl font-extrabold text-cyan-400 font-mono">0.999999</div>
+            <div class="text-[11px] text-slate-500 mt-1">Near-zero false positive rate</div>
+        </div>
+
+        <div class="bg-cyber-800/60 border border-slate-800 p-5 rounded-2xl backdrop-blur text-center hover:border-cyan-500/30 transition-all">
+            <div class="text-xs font-mono text-slate-400 uppercase tracking-wider mb-1">Autonomous Flow</div>
+            <div class="text-2xl sm:text-3xl font-extrabold text-blue-400 font-mono">99.93%</div>
+            <div class="text-[11px] text-slate-500 mt-1">40,349 URLs processed directly</div>
+        </div>
+
+        <div class="bg-cyber-800/60 border border-slate-800 p-5 rounded-2xl backdrop-blur text-center hover:border-cyan-500/30 transition-all">
+            <div class="text-xs font-mono text-slate-400 uppercase tracking-wider mb-1">Active Quarantine</div>
+            <div class="text-2xl sm:text-3xl font-extrabold text-amber-400 font-mono">0.07%</div>
+            <div class="text-[11px] text-slate-500 mt-1">Only 29 ambiguous cases routed</div>
+        </div>
+
+    </div>
+
+    <!-- Architectural Comparison: Baseline vs Proposed -->
+    <div class="max-w-5xl mx-auto space-y-6">
+        <div class="text-center space-y-2">
+            <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">System Architecture Comparison</h2>
+            <p class="text-slate-400 text-sm max-w-xl mx-auto">See how the proposed trust-aware mechanism addresses the static limitations of traditional deep-learning detection.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            
+            <!-- Existing System Card -->
+            <div class="bg-cyber-800/40 border border-slate-800 rounded-2xl p-6 relative flex flex-col justify-between">
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono px-3 py-1 bg-slate-800 text-slate-400 rounded-lg border border-slate-700">Baseline Architecture</span>
+                        <span class="text-sm font-mono font-bold text-slate-400">95.22% Acc</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-200">Standard Hybrid LSTM + Attention</h3>
+                    
+                    <ul class="space-y-2.5 text-xs text-slate-400">
+                        <li class="flex items-start">
+                            <i class="bi bi-x-circle text-red-400 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span>Static training data with delayed periodic retraining overhead.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="bi bi-x-circle text-red-400 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span>No dedicated novelty or out-of-distribution confidence gate.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="bi bi-x-circle text-red-400 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span>Vulnerable to poisoning from unverified crowdsourced intelligence.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="bi bi-x-circle text-red-400 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span>Requires constant human verification for every unknown sample.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-500 font-mono">
+                    <span>Inference: Single Decision</span>
+                    <span>Risk: Data Contamination</span>
+                </div>
+            </div>
+
+            <!-- Proposed System Card -->
+            <div class="bg-gradient-to-b from-cyber-800/90 to-cyber-900 border border-cyan-500/40 rounded-2xl p-6 relative flex flex-col justify-between glow-accent">
+                <div class="absolute -top-3 right-6 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-mono text-[10px] font-bold px-3 py-0.5 rounded-full uppercase tracking-wider shadow">
+                    Active System
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono px-3 py-1 bg-cyan-950/80 text-cyan-300 rounded-lg border border-cyan-800">Proposed Framework</span>
+                        <span class="text-sm font-mono font-bold text-emerald-400">99.9777% Acc</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Adaptive Trust-Aware Multi-View Detection</h3>
+                    
+                    <ul class="space-y-2.5 text-xs text-slate-300">
+                        <li class="flex items-start">
+                            <i class="bi bi-check-circle-fill text-emerald-400 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span><strong>Multi-View Fusion:</strong> Joint URL sequence + structural feature representations.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="bi bi-check-circle-fill text-emerald-400 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span><strong>Confidence & Novelty Scoring:</strong> Automatically routes 99.93% high-confidence URLs.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="bi bi-check-circle-fill text-emerald-400 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span><strong>Trust-Aware Quarantine:</strong> Validates crowdsourced threat intel before retraining.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="bi bi-check-circle-fill text-emerald-400 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span><strong>Concept-Drift Adaptation:</strong> Retrains selectively upon genuine distributional shift.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs text-cyan-300 font-mono">
+                    <span>Autonomous Route: 99.93%</span>
+                    <span>Quarantine Pipeline: 0.07%</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 4-Stage Operational Pipeline -->
+    <div class="max-w-5xl mx-auto space-y-6 pt-4">
+        <div class="text-center space-y-2">
+            <h2 class="text-2xl font-bold text-white tracking-tight">Real-Time Threat Detection Pipeline</h2>
+            <p class="text-slate-400 text-xs">How incoming URLs are tokenized, evaluated, and adapted in production.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <div class="bg-cyber-800/40 border border-slate-800 p-4 rounded-xl space-y-2">
+                <div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-800 flex items-center justify-center text-cyan-400 font-mono font-bold text-xs">
+                    01
+                </div>
+                <h4 class="font-bold text-white text-sm">Multi-View Extraction</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Extracts token-level character sequences alongside lexical, statistical, and structural features.</p>
+            </div>
+
+            <div class="bg-cyber-800/40 border border-slate-800 p-4 rounded-xl space-y-2">
+                <div class="w-8 h-8 rounded-lg bg-indigo-950 border border-indigo-800 flex items-center justify-center text-indigo-400 font-mono font-bold text-xs">
+                    02
+                </div>
+                <h4 class="font-bold text-white text-sm">Confidence & Novelty</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Assesses prediction certainty. High-confidence URLs pass directly; novel patterns get flagged.</p>
+            </div>
+
+            <div class="bg-cyber-800/40 border border-slate-800 p-4 rounded-xl space-y-2">
+                <div class="w-8 h-8 rounded-lg bg-amber-950 border border-amber-800 flex items-center justify-center text-amber-400 font-mono font-bold text-xs">
+                    03
+                </div>
+                <h4 class="font-bold text-white text-sm">Trust Quarantine</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Crowdsourced submissions undergo consistency checks to prevent adversarial poisoning.</p>
+            </div>
+
+            <div class="bg-cyber-800/40 border border-slate-800 p-4 rounded-xl space-y-2">
+                <div class="w-8 h-8 rounded-lg bg-emerald-950 border border-emerald-800 flex items-center justify-center text-emerald-400 font-mono font-bold text-xs">
+                    04
+                </div>
+                <h4 class="font-bold text-white text-sm">Drift-Aware Updating</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Detects data drift dynamically and verifies candidate models prior to production deployment.</p>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+.env
+python-3.12.7-installer.exe
+db.sqlite3
+.git/

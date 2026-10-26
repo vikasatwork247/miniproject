@@ -1,0 +1,318 @@
+{% extends 'admin/adminbase.html' %}
+
+{% block title %}Model Training & Validation Pipeline | TrustShield AI{% endblock %}
+{% block header_title %}Adaptive Model Training & Empirical Validation{% endblock %}
+
+{% block extra_head %}
+<!-- Chart.js CDN for High-Performance Telemetry Visualizations -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <!-- Upload & Ingestion Console Card -->
+    <div class="bg-cyber-800/80 border border-slate-700/80 rounded-2xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl relative glow-accent">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-800 gap-4">
+            <div class="space-y-1">
+                <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
+                    <h3 class="text-xl font-bold text-white tracking-tight">Dataset Ingestion & Active Retraining</h3>
+                </div>
+                <p class="text-xs text-slate-400">
+                    Upload new labelled threat corpora (.csv) to initiate multi-view feature fusion, drift analysis, and empirical cross-validation.
+                </p>
+            </div>
+
+            <div class="flex items-center space-x-2 font-mono text-xs bg-cyber-900 border border-slate-700 px-3.5 py-1.5 rounded-xl text-slate-300 shrink-0">
+                <i class="bi bi-shield-lock text-cyan-400"></i>
+                <span>Drift-Aware Deployment Gate</span>
+            </div>
+        </div>
+
+        {% if error_message %}
+        <div class="mt-4 p-4 rounded-xl bg-red-950/40 border border-red-800 text-red-200 text-xs flex items-center space-x-2 shadow-lg">
+            <i class="bi bi-exclamation-octagon-fill text-red-400 text-base"></i>
+            <div>
+                <strong class="font-mono">Training Error:</strong> {{ error_message }}
+            </div>
+        </div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data" id="trainForm" class="space-y-6 mt-6">
+            {% csrf_token %}
+            
+            <!-- Modern Drag & Drop Zone -->
+            <div id="dropzone" 
+                 class="border-2 border-dashed border-slate-700 hover:border-cyan-500/80 bg-cyber-900/60 hover:bg-cyber-900/90 rounded-2xl p-8 sm:p-10 text-center transition-all duration-300 cursor-pointer flex flex-col items-center justify-center group shadow-inner">
+                
+                <div class="w-16 h-16 rounded-2xl bg-cyber-800 border border-slate-700 flex items-center justify-center text-slate-400 group-hover:text-cyan-400 group-hover:scale-110 group-hover:border-cyan-500/50 transition-all duration-300 mb-4 shadow-md">
+                    <i class="bi bi-cloud-arrow-up text-3xl"></i>
+                </div>
+                
+                <p class="text-sm font-semibold text-slate-200">
+                    Drag and drop your training CSV here, or <span class="text-cyan-400 underline decoration-cyan-500/50 underline-offset-4 group-hover:text-cyan-300">browse local files</span>
+                </p>
+                <p id="fileNamePreview" class="text-xs text-slate-500 font-mono mt-2">Accepts UTF-8 encoded datasets with structural & sequence columns (.csv)</p>
+                
+                <input type="file" id="training_csv" name="training_csv" accept=".csv" class="hidden" required>
+            </div>
+
+            <!-- Submit Action -->
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 pt-2">
+                <div class="flex items-center space-x-2 text-[11px] text-slate-500 font-mono">
+                    <i class="bi bi-info-circle text-cyan-400"></i>
+                    <span>Candidate model evaluated before production promotion.</span>
+                </div>
+
+                <button type="submit" id="submitBtn" 
+                        class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold text-xs font-mono rounded-xl shadow-lg shadow-cyan-500/25 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center space-x-2">
+                    <i class="bi bi-cpu-fill"></i>
+                    <span>Initiate Model Training & Validation</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    {% if report %}
+    <!-- Model Evaluation Telemetry Results Section -->
+    <div class="space-y-6">
+        
+        <div class="flex items-center space-x-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <h3 class="text-lg font-bold text-white tracking-tight">Validation & Diagnostic Performance Report</h3>
+        </div>
+
+        <!-- Top Metrics Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            
+            <div class="bg-cyber-800/80 border border-slate-700/80 p-5 rounded-2xl backdrop-blur-xl shadow-lg">
+                <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">Overall Accuracy</span>
+                <p class="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono mt-1">{{ report.accuracy }}%</p>
+                <span class="text-[11px] text-slate-500 font-mono mt-1 block">Across {{ report.total_samples }} samples</span>
+            </div>
+
+            <div class="bg-cyber-800/80 border border-slate-700/80 p-5 rounded-2xl backdrop-blur-xl shadow-lg">
+                <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">Macro Precision</span>
+                <p class="text-2xl sm:text-3xl font-extrabold text-cyan-400 font-mono mt-1">{{ report.precision }}%</p>
+                <span class="text-[11px] text-slate-500 font-mono mt-1 block">Low false positive rate</span>
+            </div>
+
+            <div class="bg-cyber-800/80 border border-slate-700/80 p-5 rounded-2xl backdrop-blur-xl shadow-lg">
+                <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">Recall / Sensitivity</span>
+                <p class="text-2xl sm:text-3xl font-extrabold text-blue-400 font-mono mt-1">{{ report.recall }}%</p>
+                <span class="text-[11px] text-slate-500 font-mono mt-1 block">Phishing capture capability</span>
+            </div>
+
+            <div class="bg-cyber-800/80 border border-slate-700/80 p-5 rounded-2xl backdrop-blur-xl shadow-lg">
+                <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">ROC / AUC Index</span>
+                <p class="text-2xl sm:text-3xl font-extrabold text-indigo-400 font-mono mt-1">{{ report.roc_auc }}</p>
+                <span class="text-[11px] text-slate-500 font-mono mt-1 block">Discrimination score</span>
+            </div>
+
+        </div>
+
+        <!-- Detailed Matrix & ROC Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Confusion Matrix & Class Breakdown -->
+            <div class="bg-cyber-800/80 border border-slate-700/80 rounded-2xl p-6 shadow-xl backdrop-blur-xl space-y-6">
+                <div>
+                    <h4 class="text-sm font-bold text-white tracking-tight flex items-center space-x-2">
+                        <i class="bi bi-grid-3x3 text-cyan-400"></i>
+                        <span>Confusion Matrix</span>
+                    </h4>
+                    <p class="text-xs text-slate-400 mt-0.5">Empirical validation against true ground-truth labels.</p>
+                </div>
+
+                <!-- 2x2 Matrix Cards -->
+                <div class="grid grid-cols-2 gap-3 text-center font-mono">
+                    <div class="p-4 bg-cyber-900/90 rounded-xl border border-emerald-800/60 shadow-inner">
+                        <span class="text-[10px] uppercase tracking-wider text-emerald-400 font-bold block">True Negatives (TN)</span>
+                        <p class="text-2xl font-extrabold text-emerald-300 mt-1">{{ report.cm.tn }}</p>
+                        <span class="text-[10px] text-slate-400">Correct Phishing Detected</span>
+                    </div>
+
+                    <div class="p-4 bg-cyber-900/90 rounded-xl border border-red-800/60 shadow-inner">
+                        <span class="text-[10px] uppercase tracking-wider text-red-400 font-bold block">False Positives (FP)</span>
+                        <p class="text-2xl font-extrabold text-red-300 mt-1">{{ report.cm.fp }}</p>
+                        <span class="text-[10px] text-slate-400">Legitimate Flagged as Phish</span>
+                    </div>
+
+                    <div class="p-4 bg-cyber-900/90 rounded-xl border border-amber-800/60 shadow-inner">
+                        <span class="text-[10px] uppercase tracking-wider text-amber-400 font-bold block">False Negatives (FN)</span>
+                        <p class="text-2xl font-extrabold text-amber-300 mt-1">{{ report.cm.fn }}</p>
+                        <span class="text-[10px] text-slate-400">Phishing Missed as Legit</span>
+                    </div>
+
+                    <div class="p-4 bg-cyber-900/90 rounded-xl border border-cyan-800/60 shadow-inner">
+                        <span class="text-[10px] uppercase tracking-wider text-cyan-400 font-bold block">True Positives (TP)</span>
+                        <p class="text-2xl font-extrabold text-cyan-300 mt-1">{{ report.cm.tp }}</p>
+                        <span class="text-[10px] text-slate-400">Correct Legitimate Identified</span>
+                    </div>
+                </div>
+
+                <!-- Classification Breakdown Table -->
+                <div>
+                    <h5 class="text-[11px] font-bold text-slate-300 uppercase tracking-wider font-mono mb-2.5">Per-Class Telemetry Report</h5>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs font-mono">
+                            <thead class="bg-cyber-900 text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                                <tr>
+                                    <th class="p-2.5">Class</th>
+                                    <th class="p-2.5">Precision</th>
+                                    <th class="p-2.5">Recall</th>
+                                    <th class="p-2.5">F1-Score</th>
+                                    <th class="p-2.5">Support</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800/80">
+                                {% for row in report.cls_report %}
+                                <tr class="hover:bg-cyber-900/50">
+                                    <td class="p-2.5 font-bold text-slate-200">{{ row.class_name }}</td>
+                                    <td class="p-2.5 text-cyan-300">{{ row.precision|floatformat:4 }}</td>
+                                    <td class="p-2.5 text-blue-300">{{ row.recall|floatformat:4 }}</td>
+                                    <td class="p-2.5 text-emerald-300">{{ row.f1_score|floatformat:4 }}</td>
+                                    <td class="p-2.5 text-slate-400">{{ row.support }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROC / AUC Curve Card -->
+            <div class="bg-cyber-800/80 border border-slate-700/80 rounded-2xl p-6 shadow-xl backdrop-blur-xl flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-sm font-bold text-white tracking-tight flex items-center space-x-2">
+                            <i class="bi bi-graph-up text-cyan-400"></i>
+                            <span>Receiver Operating Characteristic (ROC)</span>
+                        </h4>
+                        <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/80 px-2.5 py-1 rounded-lg border border-emerald-800">
+                            AUC: {{ report.roc_auc }}
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-1">True Positive Rate vs. False Positive Rate Discrimination Curve.</p>
+                </div>
+
+                <div class="relative h-72 w-full mt-4 bg-cyber-900/90 rounded-xl p-3 border border-slate-800">
+                    <canvas id="rocChart"></canvas>
+                </div>
+
+                <div class="pt-4 border-t border-slate-800/80 text-center font-mono text-[11px] text-slate-400">
+                    Evaluated Dataset: <span class="text-cyan-400">{{ report.file_name }}</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // File Ingestion and Drag-and-Drop Handlers
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('training_csv');
+    const fileNamePreview = document.getElementById('fileNamePreview');
+
+    if (dropzone && fileInput) {
+        dropzone.addEventListener('click', () => fileInput.click());
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('border-cyan-500', 'bg-cyber-900');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('border-cyan-500', 'bg-cyber-900');
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('border-cyan-500', 'bg-cyber-900');
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                fileNamePreview.innerText = `Selected Payload: ${fileInput.files[0].name}`;
+                fileNamePreview.className = 'text-xs text-cyan-400 font-mono mt-2 font-bold';
+            }
+        });
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length) {
+                fileNamePreview.innerText = `Selected Payload: ${fileInput.files[0].name}`;
+                fileNamePreview.className = 'text-xs text-cyan-400 font-mono mt-2 font-bold';
+            }
+        });
+    }
+
+    // Chart.js ROC Curve Initialization (Dark Mode Theme)
+    {% if report and report.roc_points %}
+    const rocData = {{ report.roc_points|safe }};
+    const ctx = document.getElementById('rocChart').getContext('2d');
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            datasets: [
+                {
+                    label: 'Proposed Model (AUC = {{ report.roc_auc }})',
+                    data: rocData,
+                    borderColor: '#06B6D4',
+                    backgroundColor: 'rgba(6, 182, 212, 0.15)',
+                    fill: true,
+                    tension: 0.25,
+                    borderWidth: 2.5,
+                    pointRadius: 2,
+                    pointHoverRadius: 5,
+                    pointBackgroundColor: '#06B6D4'
+                },
+                {
+                    label: 'Random Baseline',
+                    data: [{x: 0, y: 0}, {x: 1, y: 1}],
+                    borderColor: '#475569',
+                    borderDash: [5, 5],
+                    fill: false,
+                    pointRadius: 0,
+                    borderWidth: 1.5
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    type: 'linear',
+                    min: 0,
+                    max: 1,
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                    ticks: { color: '#94A3B8', font: { family: 'JetBrains Mono', size: 10 } },
+                    title: { display: true, text: 'False Positive Rate (FPR)', color: '#CBD5E1', font: { family: 'JetBrains Mono', size: 10 } }
+                },
+                y: {
+                    type: 'linear',
+                    min: 0,
+                    max: 1,
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                    ticks: { color: '#94A3B8', font: { family: 'JetBrains Mono', size: 10 } },
+                    title: { display: true, text: 'True Positive Rate (TPR)', color: '#CBD5E1', font: { family: 'JetBrains Mono', size: 10 } }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: '#E2E8F0', boxWidth: 12, font: { family: 'JetBrains Mono', size: 10 } }
+                }
+            }
+        }
+    });
+    {% endif %}
+</script>
+{% endblock %}

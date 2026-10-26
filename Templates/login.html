@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign In | TrustShield AI Security Portal{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center py-6 sm:py-10">
+    <div class="max-w-md w-full bg-cyber-800/80 border border-slate-700/70 rounded-2xl shadow-2xl shadow-black/40 backdrop-blur-xl p-8 relative glow-accent">
+        
+        <!-- Header Security Icon & Branding -->
+        <div class="text-center space-y-2 mb-8">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-600 to-blue-600 mx-auto flex items-center justify-center text-white shadow-lg shadow-cyan-500/25">
+                <i class="bi bi-shield-lock text-2xl"></i>
+            </div>
+            <h2 class="text-2xl font-extrabold text-white tracking-tight">Security Portal Access</h2>
+            <p class="text-xs text-slate-400 font-normal">Authenticate to access live detection & threat intelligence</p>
+        </div>
+
+        <!-- Login Form -->
+        <form action="{% url 'user_login' %}" method="POST" class="space-y-5">
+            {% csrf_token %}
+            
+            <!-- Username Input -->
+            <div class="space-y-1.5 text-left">
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider font-mono" for="username">
+                    <i class="bi bi-person mr-1 text-cyan-400"></i> Username / Identity
+                </label>
+                <div class="relative">
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        required 
+                        placeholder="e.g. security_admin"
+                        class="w-full pl-10 pr-4 py-2.5 bg-cyber-900/90 border border-slate-700 text-slate-100 placeholder-slate-500 text-sm rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 focus:outline-none transition-all">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Password Input -->
+            <div class="space-y-1.5 text-left">
+                <div class="flex justify-between items-center">
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider font-mono" for="password">
+                        <i class="bi bi-key mr-1 text-cyan-400"></i> Password Key
+                    </label>
+                </div>
+                <div class="relative">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required 
+                        placeholder="••••••••••••"
+                        class="w-full pl-10 pr-10 py-2.5 bg-cyber-900/90 border border-slate-700 text-slate-100 placeholder-slate-500 text-sm rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 focus:outline-none transition-all">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+                        <i class="bi bi-lock-fill"></i>
+                    </div>
+                    <button 
+                        type="button" 
+                        onclick="togglePasswordVisibility()" 
+                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-200">
+                        <i class="bi bi-eye text-sm" id="toggleIcon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+                type="submit" 
+                class="w-full py-3 px-4 bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold text-sm rounded-xl shadow-lg shadow-cyan-500/25 transition-all transform hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-cyan-500/50">
+                <i class="bi bi-box-arrow-in-right mr-1.5"></i> Authenticate & Enter
+            </button>
+        </form>
+
+        <!-- Onboarding Switch Link -->
+        <div class="mt-6 pt-5 border-t border-slate-800 text-center">
+            <p class="text-xs text-slate-400">
+                Need threat analyst credentials? 
+                <a href="{% url 'register' %}" class="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors ml-1 inline-flex items-center">
+                    Register here <i class="bi bi-arrow-right-short text-base"></i>
+                </a>
+            </p>
+        </div>
+
+        <!-- Security Gateway Notice -->
+        <div class="mt-4 flex items-center justify-center space-x-2 text-[11px] text-slate-500 font-mono">
+            <i class="bi bi-shield-check text-emerald-400"></i>
+            <span>256-Bit Encrypted Multi-View Verification</span>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById('password');
+        const toggleIcon = document.getElementById('toggleIcon');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.classList.remove('bi-eye');
+            toggleIcon.classList.add('bi-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            toggleIcon.classList.remove('bi-eye-slash');
+            toggleIcon.classList.add('bi-eye');
+        }
+    }
+</script>
+{% endblock %}

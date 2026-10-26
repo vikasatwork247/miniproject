@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Threat Analyst Account | TrustShield AI{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center py-4 sm:py-8">
+    <div class="max-w-xl w-full bg-cyber-800/80 border border-slate-700/70 rounded-2xl shadow-2xl shadow-black/50 backdrop-blur-xl p-6 sm:p-8 relative glow-accent">
+        
+        <!-- Header Icon & Branding -->
+        <div class="text-center space-y-2 mb-6">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500 to-indigo-600 mx-auto flex items-center justify-center text-white shadow-lg shadow-cyan-500/25">
+                <i class="bi bi-person-badge text-2xl"></i>
+            </div>
+            <h2 class="text-2xl font-extrabold text-white tracking-tight">Create Security Account</h2>
+            <p class="text-xs text-slate-400 font-normal">Register to access the phishing detection engine and telemetry</p>
+        </div>
+
+        <!-- Inline Flash Messages -->
+        {% if messages %}
+        <div class="mb-5 space-y-2">
+            {% for message in messages %}
+            <div class="p-3 text-xs rounded-xl flex items-center space-x-2 border {% if message.tags == 'error' %}bg-red-950/40 text-red-300 border-red-800{% else %}bg-emerald-950/40 text-emerald-300 border-emerald-800{% endif %}">
+                <i class="bi {% if message.tags == 'error' %}bi-exclamation-octagon-fill text-red-400{% else %}bi-check-circle-fill text-emerald-400{% endif %}"></i>
+                <span>{{ message }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Registration Form -->
+        <form action="{% url 'user_registration' %}" method="POST" class="space-y-4" onsubmit="return validatePasswords()">
+            {% csrf_token %}
+            
+            <!-- First Name & Last Name -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1.5 text-left">
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider font-mono" for="first_name">
+                        <i class="bi bi-card-text mr-1 text-cyan-400"></i> First Name
+                    </label>
+                    <input 
+                        type="text" 
+                        id="first_name" 
+                        name="first_name" 
+                        required 
+                        placeholder="John"
+                        class="w-full px-3.5 py-2.5 bg-cyber-900/90 border border-slate-700 text-slate-100 placeholder-slate-500 text-sm rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 focus:outline-none transition-all">
+                </div>
+                
+                <div class="space-y-1.5 text-left">
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider font-mono" for="last_name">
+                        <i class="bi bi-card-text mr-1 text-cyan-400"></i> Last Name
+                    </label>
+                    <input 
+                        type="text" 
+                        id="last_name" 
+                        name="last_name" 
+                        required 
+                        placeholder="Doe"
+                        class="w-full px-3.5 py-2.5 bg-cyber-900/90 border border-slate-700 text-slate-100 placeholder-slate-500 text-sm rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 focus:outline-none transition-all">
+                </div>
+            </div>
+
+            <!-- Username -->
+            <div class="space-y-1.5 text-left">
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider font-mono" for="username">
+                    <i class="bi bi-person mr-1 text-cyan-400"></i> Username
+                </label>
+                <div class="relative">
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        required 
+                        placeholder="analyst_john"
+                        class="w-full pl-10 pr-4 py-2.5 bg-cyber-900/90 border border-slate-700 text-slate-100 placeholder-slate-500 text-sm rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 focus:outline-none transition-all">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Address -->
+            <div class="space-y-1.5 text-left">
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider font-mono" for="email">
+                    <i class="bi bi-envelope mr-1 text-cyan-400"></i> Email Address
+                </label>
+                <div class="relative">
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        placeholder="analyst@domain.com"
+                        class="w-full pl-10 pr-4 py-2.5 bg-cyber-900/90 border border-slate-700 text-slate-100 placeholder-slate-500 text-sm rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 focus:outline-none transition-all">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+                        <i class="bi bi-envelope-fill"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Passwords Row -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1.5 text-left">
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider font-mono" for="password">
+                        <i class="bi bi-key mr-1 text-cyan-400"></i> Password
+                    </label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required 
+                        placeholder="••••••••••••"
+                        onkeyup="checkPasswordStrength(this.value)"
+                        class="w-full px-3.5 py-2.5 bg-cyber-900/90 border border-slate-700 text-slate-100 placeholder-slate-500 text-sm rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 focus:outline-none transition-all">
+                </div>
+                
+                <div class="space-y-1.5 text-left">
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider font-mono" for="confirm_password">
+                        <i class="bi bi-shield-check mr-1 text-cyan-400"></i> Confirm Password
+                    </label>
+                    <input 
+                        type="password" 
+                        id="confirm_password" 
+                        name="confirm_password" 
+                        required 
+                        placeholder="••••••••••••"
+                        class="w-full px-3.5 py-2.5 bg-cyber-900/90 border border-slate-700 text-slate-100 placeholder-slate-500 text-sm rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 focus:outline-none transition-all">
+                </div>
+            </div>
+
+            <!-- Password Strength Bar Indicator -->
+            <div id="strength-container" class="space-y-1 pt-1 hidden">
+                <div class="flex justify-between text-[11px] font-mono text-slate-400">
+                    <span>Key Entropy:</span>
+                    <span id="strength-text" class="text-slate-300 font-semibold">Weak</span>
+                </div>
+                <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                    <div id="strength-bar" class="h-1.5 bg-red-500 w-1/4 transition-all duration-300"></div>
+                </div>
+            </div>
+
+            <p id="password-match-error" class="text-xs text-red-400 hidden font-mono">
+                <i class="bi bi-exclamation-triangle mr-1"></i> Passwords do not match.
+            </p>
+
+            <!-- Submit Button -->
+            <button 
+                type="submit" 
+                class="w-full py-3 px-4 mt-2 bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold text-sm rounded-xl shadow-lg shadow-cyan-500/25 transition-all transform hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-cyan-500/50">
+                <i class="bi bi-person-plus-fill mr-1.5"></i> Register Threat Analyst Account
+            </button>
+        </form>
+
+        <!-- Login Switch Link -->
+        <div class="mt-6 pt-4 border-t border-slate-800 text-center">
+            <p class="text-xs text-slate-400">
+                Already registered with credentials? 
+                <a href="{% url 'loginn' %}" class="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors ml-1 inline-flex items-center">
+                    Sign in here <i class="bi bi-arrow-right-short text-base"></i>
+                </a>
+            </p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function checkPasswordStrength(password) {
+        const container = document.getElementById('strength-container');
+        const bar = document.getElementById('strength-bar');
+        const text = document.getElementById('strength-text');
+        
+        if (!password) {
+            container.classList.add('hidden');
+            return;
+        }
+        container.classList.remove('hidden');
+
+        let score = 0;
+        if (password.length >= 8) score++;
+        if (/[A-Z]/.test(password)) score++;
+        if (/[0-9]/.test(password)) score++;
+        if (/[^A-Za-z0-9]/.test(password)) score++;
+
+        if (score <= 1) {
+            bar.className = 'h-1.5 bg-red-500 w-1/4 transition-all duration-300';
+            text.textContent = 'Weak';
+            text.className = 'text-red-400 font-semibold';
+        } else if (score === 2 || score === 3) {
+            bar.className = 'h-1.5 bg-amber-500 w-3/4 transition-all duration-300';
+            text.textContent = 'Moderate';
+            text.className = 'text-amber-400 font-semibold';
+        } else {
+            bar.className = 'h-1.5 bg-emerald-500 w-full transition-all duration-300';
+            text.textContent = 'Strong (Cryptographically Sound)';
+            text.className = 'text-emerald-400 font-semibold';
+        }
+    }
+
+    function validatePasswords() {
+        const p1 = document.getElementById('password').value;
+        const p2 = document.getElementById('confirm_password').value;
+        const err = document.getElementById('password-match-error');
+
+        if (p1 !== p2) {
+            err.classList.remove('hidden');
+            return false;
+        }
+        err.classList.add('hidden');
+        return true;
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends 'admin/adminbase.html' %}
+
+{% block title %}SOC Analyst Governance | TrustShield AI{% endblock %}
+{% block header_title %}Security Analyst Registry & Governance{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Top Telemetry KPI Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <div class="bg-cyber-800/70 border border-slate-700/80 rounded-2xl p-5 backdrop-blur-xl flex flex-col justify-between shadow-lg">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-mono text-slate-400 uppercase tracking-wider">Registered Analysts</span>
+                <div class="w-8 h-8 rounded-lg bg-cyan-950/80 border border-cyan-800 flex items-center justify-center text-cyan-400 text-sm">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+            </div>
+            <div class="mt-3">
+                <p class="text-3xl font-extrabold font-mono text-white">{{ users_list|length|default:"0" }}</p>
+                <span class="text-[11px] text-slate-400 mt-1 block">Active identity registry</span>
+            </div>
+        </div>
+
+        <div class="bg-cyber-800/70 border border-slate-700/80 rounded-2xl p-5 backdrop-blur-xl flex flex-col justify-between shadow-lg">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-mono text-slate-400 uppercase tracking-wider">Engine Status</span>
+                <div class="w-8 h-8 rounded-lg bg-emerald-950/80 border border-emerald-800 flex items-center justify-center text-emerald-400 text-sm">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+            </div>
+            <div class="mt-3">
+                <p class="text-3xl font-extrabold font-mono text-emerald-400 flex items-center">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 mr-2 animate-ping"></span> ONLINE
+                </p>
+                <span class="text-[11px] text-slate-400 mt-1 block">Live inference & drift monitor</span>
+            </div>
+        </div>
+
+        <div class="bg-cyber-800/70 border border-slate-700/80 rounded-2xl p-5 backdrop-blur-xl flex flex-col justify-between shadow-lg">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-mono text-slate-400 uppercase tracking-wider">Detection Pipeline</span>
+                <div class="w-8 h-8 rounded-lg bg-indigo-950/80 border border-indigo-800 flex items-center justify-center text-indigo-400 text-sm">
+                    <i class="bi bi-cpu"></i>
+                </div>
+            </div>
+            <div class="mt-3">
+                <p class="text-3xl font-extrabold font-mono text-cyan-400">99.9777%</p>
+                <span class="text-[11px] text-slate-400 mt-1 block">Multi-View fused accuracy</span>
+            </div>
+        </div>
+
+        <div class="bg-cyber-800/70 border border-slate-700/80 rounded-2xl p-5 backdrop-blur-xl flex flex-col justify-between shadow-lg">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-mono text-slate-400 uppercase tracking-wider">Autonomous Route</span>
+                <div class="w-8 h-8 rounded-lg bg-amber-950/80 border border-amber-800 flex items-center justify-center text-amber-400 text-sm">
+                    <i class="bi bi-diagram-3-fill"></i>
+                </div>
+            </div>
+            <div class="mt-3">
+                <p class="text-3xl font-extrabold font-mono text-amber-400">99.93%</p>
+                <span class="text-[11px] text-slate-400 mt-1 block">0.07% to active quarantine</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- User Account Governance Table Card -->
+    <div class="bg-cyber-800/80 border border-slate-700/80 rounded-2xl p-6 shadow-xl backdrop-blur-xl">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-3">
+            <div>
+                <h3 class="text-base font-bold text-white tracking-tight flex items-center space-x-2">
+                    <i class="bi bi-person-gear text-cyan-400"></i>
+                    <span>Analyst Access Control & Identity Verification</span>
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">Toggle portal authorization credentials and review permissions.</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="text-xs font-mono text-slate-400 bg-cyber-900 px-3 py-1.5 rounded-xl border border-slate-800">
+                    Total Identities: <strong class="text-cyan-400 font-mono">{{ users_list|length|default:"0" }}</strong>
+                </span>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto mt-4">
+            <table class="w-full text-left text-xs font-mono">
+                <thead class="bg-cyber-900/90 text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                    <tr>
+                        <th class="p-3.5">Principal ID</th>
+                        <th class="p-3.5">Analyst Identity</th>
+                        <th class="p-3.5">Email Destination</th>
+                        <th class="p-3.5">Access State</th>
+                        <th class="p-3.5 text-right">Access Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/80">
+                    {% for u in users_list %}
+                    <tr class="hover:bg-cyber-900/50 transition-colors">
+                        <td class="p-3.5 text-slate-500">#{{ u.id }}</td>
+                        
+                        <td class="p-3.5 font-bold text-slate-100 flex items-center space-x-2.5">
+                            <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-cyan-600 to-indigo-600 flex items-center justify-center text-white text-[11px] font-bold shadow-sm">
+                                {{ u.username|make_list|first|upper }}
+                            </div>
+                            <span class="font-sans text-xs font-semibold text-slate-200">{{ u.username }}</span>
+                        </td>
+
+                        <td class="p-3.5 text-slate-400">{{ u.email|default:"N/A" }}</td>
+
+                        <td class="p-3.5">
+                            <span class="px-2.5 py-1 text-[10px] font-bold rounded-lg border font-mono {% if u.is_active %}bg-emerald-950/80 text-emerald-400 border-emerald-800/80{% else %}bg-red-950/80 text-red-400 border-red-800/80{% endif %}">
+                                <i class="bi {% if u.is_active %}bi-check-circle-fill{% else %}bi-x-circle-fill{% endif %} mr-1"></i>
+                                {{ u.is_active|yesno:"ACTIVE,INACTIVE" }}
+                            </span>
+                        </td>
+
+                        <td class="p-3.5 text-right">
+                            <a href="{% url 'admin_update_userstatus' u.id %}" 
+                               class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-cyber-700 hover:bg-cyber-600 border border-slate-600 text-cyan-300 hover:text-white rounded-lg transition-all text-xs font-sans font-medium shadow-sm">
+                                <i class="bi bi-arrow-repeat text-cyan-400"></i>
+                                <span>Toggle Status</span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="p-8 text-center text-slate-500 font-mono text-xs">
+                            <i class="bi bi-inbox text-2xl block mb-1 text-slate-600"></i>
+                            No registered analyst accounts found in the security registry.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
